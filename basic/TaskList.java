@@ -2,7 +2,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class TaskListApp {
+public class TaskList {
     public static void main(String[] args) {
         TaskList taskList = new TaskList();
 
