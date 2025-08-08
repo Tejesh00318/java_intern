@@ -8,16 +8,16 @@ public class Generator {
     }
 
     public void mainLoop() {
-        System.out.println("🔐 Welcome to the Ultimate Password Service");
+        System.out.println(" Welcome to the Ultimate Password Service");
 
         boolean running = true;
         while (running) {
-            System.out.println("\n📋 Menu:");
+            System.out.println("\nMain Menu:");
             System.out.println("1.Password Generate");
             System.out.println("2.Password Strength Check");
             System.out.println("3. Useful Information");
             System.out.println("4. Quit");
-            System.out.print("👉 Enter your choice: ");
+            System.out.print(" Enter your choice: ");
 
 
             String choice = scanner.nextLine();
@@ -33,11 +33,11 @@ public class Generator {
                     showUsefulInfo();
                     break;
                 case "4":
-                    System.out.println("👋 Exiting... Stay secure!");
+                    System.out.println(" Exiting... Stay secure!");
                     running = false;
                     break;
                 default:
-                    System.out.println("❌ Invalid choice. Please try again.");
+                    System.out.println(" Invalid choice. Please try again.");
             }
         }
     }
@@ -45,7 +45,7 @@ public class Generator {
     private void generatePasswordFlow() {
 
         System.out.println("\t Answer the following questions by  'y' or 'N' ");
-        System.out.println("✅ Choose character types to include:");
+        System.out.println(" Choose character types to include:");
         System.out.print("Do you want  uppercase letters (A–Z)? (y/n): ");
         boolean useUpper = scanner.nextLine().trim().equalsIgnoreCase("y");
 
@@ -57,22 +57,22 @@ public class Generator {
 
         System.out.print("Do you want special symbols (!@#$...)? (y/n): ");
         boolean useSymbols = scanner.nextLine().trim().equalsIgnoreCase("y");
-        System.out.print("🔢 Enter desired password length (8–32): ");
+        System.out.print(" Enter desired password length (8–32): ");
         int length;
 
         try {
             length = Integer.parseInt(scanner.nextLine());
             if (length < 8 || length > 32) {
-                System.out.println("⚠️ Length must be between 8 and 32.");
+                System.out.println(" Length must be between 8 and 32.");
                 return;
             }
         } catch (NumberFormatException e) {
-            System.out.println("❌ Invalid number format.");
+            System.out.println(" Invalid number format.");
             return;
         }
 
         if (!useUpper && !useLower && !useDigits && !useSymbols) {
-            System.out.println("❌ You must select at least one character type to generate password.");
+            System.out.println(" You must select at least one character type to generate password.");
             return;
         }
 
@@ -82,18 +82,18 @@ public class Generator {
         StrengthChecker checker = new StrengthChecker();
         String strength = checker.evaluate(password);
 
-        System.out.println("\n🔑 Generated Password: " + password);
-        System.out.println("💪 Strength: " + strengthBar(strength) + " (" + strength + ")");
+        System.out.println("\n Generated Password: " + password);
+        System.out.println(" Strength: " + strengthBar(strength) + " (" + strength + ")");
     }
 
     private void checkStrengthFlow() {
-        System.out.print("🔍 Enter a password to check its strength: ");
+        System.out.print(" Enter a password to check its strength: ");
         String inputPassword = scanner.nextLine();
 
         StrengthChecker checker = new StrengthChecker();
         String strength = checker.evaluate(inputPassword);
 
-        System.out.println("💪 Strength: " + strengthBar(strength) + " (" + strength + ")");
+        System.out.println(" Strength: " + strengthBar(strength) + " (" + strength + ")");
     }
 
     private void showUsefulInfo() {
@@ -119,3 +119,4 @@ public class Generator {
         }
     }
 }
+
