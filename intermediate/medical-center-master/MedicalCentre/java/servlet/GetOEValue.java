@@ -7,17 +7,18 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
+import java.sql.ResultSet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONValue;
 import medicalcenter.database;
 /**
  *
  * @author Administrator
  */
-public class AddNewcc extends HttpServlet {
+public class GetOEValue extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -30,16 +31,24 @@ public class AddNewcc extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String ccName=request.getParameter("cc_name");
-        String value="'"+ccName+"','cheif_complaint'";
+            String str=null;
+            ResultSet rs=null;
+            String sql="SELECT observation_value FROM diagnosis_info "
+                    + "where observation_name='"+request.getParameter("oename")+"' "
+                    + "and observation_type='on_examination'";
         try {
             database db=new database();
-            db.insert("diagnosis_info", "observation_name,observation_type",value);
-
-        }catch(SQLException e){
-           System.out.println("ADdd new cc= "+ccName);
-        }
-        finally {
+               rs=db.executeQuery(sql);
+            while(rs.next()){
+                str=rs.getString("observation_value");
+            }
+               String jsonString = JSONValue.toJSONString(str);
+           //    System.out.println(jsonString);
+             //  System.out.println(jsonString);
+                out.println(jsonString);
+                }catch(Exception e){
+                    out.println("Error : "+e);
+        }  finally {
             out.close();
         }
     }

@@ -17,7 +17,7 @@ import medicalcenter.database;
  *
  * @author Administrator
  */
-public class AddNewcc extends HttpServlet {
+public class AddNewInv extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -30,8 +30,8 @@ public class AddNewcc extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String ccName=request.getParameter("cc_name");
-        String value="'"+ccName+"','cheif_complaint'";
+        String ccName=request.getParameter("inv_name");
+        String value="'"+ccName+"','investigation'";
         try {
             database db=new database();
             db.insert("diagnosis_info", "observation_name,observation_type",value);

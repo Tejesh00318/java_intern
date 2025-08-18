@@ -6,18 +6,22 @@
 package servlet;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
-import java.sql.SQLException;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import medicalcenter.database;
+
 /**
  *
  * @author Administrator
  */
-public class AddNewcc extends HttpServlet {
+public class RetrieveImage extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -30,18 +34,48 @@ public class AddNewcc extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String ccName=request.getParameter("cc_name");
-        String value="'"+ccName+"','cheif_complaint'";
-        try {
-            database db=new database();
-            db.insert("diagnosis_info", "observation_name,observation_type",value);
+       // String connectionURL = "jdbc:mysql://localhost:3306/central_db";
+        String sql=null;
+        //java.sql.Connection con=null;
+    try{
+     // Class.forName("com.mysql.jdbc.Driver").newInstance();
+    //  con=DriverManager.getConnection(connectionURL,"root","admin");
 
-        }catch(SQLException e){
-           System.out.println("ADdd new cc= "+ccName);
-        }
-        finally {
-            out.close();
-        }
+      sql="SELECT photo FROM student_personal_info,student "
+              + "WHERE student.student_pk=student_personal_info.student_personal_pk_fk "
+              + "and student.registration_no="+request.getParameter("regNo");
+      //out.println(sql);
+     // Statement st1=con.createStatement();
+      database db=new database();
+      ResultSet rs1 = db.executeQuery(sql); //+request.getAttribute("reg")); //+request.getAttribute("reg")); //getParameter("regNo"));
+      String imgLen="";
+      if(rs1.next()){
+        imgLen = rs1.getString("photo");
+        //out.println("<br>YEs<br>");
+      }
+      rs1 = db.executeQuery(sql);
+      if(rs1.next()){
+
+        int len = imgLen.length();
+        byte [] rb = new byte[len];
+        InputStream readImg = rs1.getBinaryStream("photo");
+
+        int index=readImg.read(rb, 0, len);
+        db.close();
+        response.reset();
+
+        response.setContentType("image/jpg");
+        response.getOutputStream().write(rb,0,len);
+        response.getOutputStream().flush();
+
+        //out.println("<br>YEs<br>");
+      }
+
+     //getServletContext().getRequestDispatcher("/CheckValue.jsp").forward(request, response);
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

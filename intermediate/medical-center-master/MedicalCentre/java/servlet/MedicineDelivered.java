@@ -5,8 +5,10 @@
 
 package servlet;
 
+import com.mysql.jdbc.CallableStatement;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Array;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +19,7 @@ import medicalcenter.database;
  *
  * @author Administrator
  */
-public class AddNewcc extends HttpServlet {
+public class MedicineDelivered extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -30,16 +32,20 @@ public class AddNewcc extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String ccName=request.getParameter("cc_name");
-        String value="'"+ccName+"','cheif_complaint'";
-        try {
+        int presNo=Integer.parseInt(request.getParameter("pres_id").toString());
+        //System.out.println("s="+presNo);
+        //String query="{ call insert_dist_log("+presNo+") }";
+        String cnd="std_prescription_fk="+presNo+" and state='undelivered'";
+        try{
             database db=new database();
-            db.insert("diagnosis_info", "observation_name,observation_type",value);
-
+            db.update("patient_med_info", "state='delivered'", cnd);
+            db.executeProcedure("insert_dist_log", presNo);
         }catch(SQLException e){
-           System.out.println("ADdd new cc= "+ccName);
+            System.out.println("error : "+e);
         }
-        finally {
+        try {
+
+        } finally {
             out.close();
         }
     }

@@ -7,19 +7,21 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
+import java.sql.ResultSet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONValue;
 import medicalcenter.database;
+
 /**
  *
  * @author Administrator
  */
-public class AddNewcc extends HttpServlet {
-
-    /**
+public class GetGeneralAdvice extends HttpServlet {
+   
+    /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -30,22 +32,30 @@ public class AddNewcc extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String ccName=request.getParameter("cc_name");
-        String value="'"+ccName+"','cheif_complaint'";
+            String str=null;
+            ResultSet rs=null;
+            String sql="SELECT general_adv_txt FROM general_advice"+
+                " where general_adv_pk="+request.getParameter("gadv_id");
+            System.out.println(request.getParameter("gadv_id"));
         try {
             database db=new database();
-            db.insert("diagnosis_info", "observation_name,observation_type",value);
-
-        }catch(SQLException e){
-           System.out.println("ADdd new cc= "+ccName);
-        }
-        finally {
+               rs=db.executeQuery(sql);
+            while(rs.next()){
+                str=rs.getString("general_adv_txt");
+            }
+               String jsonString = JSONValue.toJSONString(str);
+               System.out.println(jsonString);
+               System.out.println(str);
+                out.println(jsonString);
+                }catch(Exception e){
+                    System.out.println("Error : "+e);
+        }  finally {
             out.close();
         }
-    }
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -56,9 +66,9 @@ public class AddNewcc extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    }
+    } 
 
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -71,7 +81,7 @@ public class AddNewcc extends HttpServlet {
         processRequest(request, response);
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */
